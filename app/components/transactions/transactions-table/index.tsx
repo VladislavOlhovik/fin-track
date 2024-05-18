@@ -1,6 +1,7 @@
 import { DeleteButton, UpdateButton } from '@/components';
-import { getLatestTransactions } from '@/API';
+import { fetchFilteredTransactions } from '@/dbAPI/data';
 import { formatDateToLocal } from '@/lib/utils';
+import { deleteTransaction } from '@/dbAPI/actions';
 
 export async function TransactionsTable({
   query,
@@ -9,7 +10,10 @@ export async function TransactionsTable({
   query: string;
   currentPage: number;
 }) {
-  const transactions = getLatestTransactions();
+  const transactions = await fetchFilteredTransactions(
+    query,
+    currentPage
+  );
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -18,17 +22,22 @@ export async function TransactionsTable({
             {transactions.map(transaction => (
               <div
                 key={transaction.transaction_id}
-                className={`mb-2 w-full rounded-md bg-white p-4
-                ${transaction.amount < 0 ? 'bg-red-50' : 'bg-green-50'}`}
+                className={`mb-2 w-full rounded-md p-4
+                ${transaction.amount[0] === '-' ? 'bg-red-50' : 'bg-green-50'}`}
               >
-                <div className="flex items-center justify-between border-b pb-4">
-                  <div>
+                <div className="flex w-full items-center justify-between border-b pb-4">
+                  <div className="w-full">
                     <div className="mb-2 flex items-center">
-                      <p>{transaction.account_name}</p>
+                      <p>{transaction.bank_name}</p>
                     </div>
-                    <p className="text-sm text-gray-500">
-                      {transaction.description}
-                    </p>
+                    <div className="flex w-full justify-between">
+                      <p className="text-sm text-gray-500">
+                        {transaction.account_name}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {transaction.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
@@ -40,10 +49,14 @@ export async function TransactionsTable({
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateButton
-                      href={`/dashboard/transaction/${transaction.transaction_id}/edit`}
+                      href={`/dashboard/transactions/${transaction.transaction_id}/edit`}
                     />
                     <DeleteButton
-                      id={transaction.transaction_id}
+                      action={deleteTransaction.bind(
+                        null,
+                        transaction.transaction_id,
+                        transaction.account_id
+                      )}
                     />
                   </div>
                 </div>
@@ -56,6 +69,12 @@ export async function TransactionsTable({
                 <th
                   scope="col"
                   className="px-4 py-5 font-medium sm:pl-6"
+                >
+                  Bank
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-5 font-medium"
                 >
                   Account
                 </th>
@@ -91,6 +110,12 @@ export async function TransactionsTable({
                 </th>
                 <th
                   scope="col"
+                  className="px-3 py-5 font-medium"
+                >
+                  Currency
+                </th>
+                <th
+                  scope="col"
                   className="relative py-3 pl-6 pr-3"
                 >
                   <span className="sr-only">Edit</span>
@@ -104,12 +129,15 @@ export async function TransactionsTable({
                   className={`w-full border-b py-3 text-sm last-of-type:border-none 
                   [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg 
                   [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg
-                  ${transaction.amount < 0 ? 'bg-red-50' : 'bg-green-50'}`}
+                  ${transaction.amount[0] === '-' ? 'bg-red-50' : 'bg-green-50'}`}
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <p>{transaction.account_name}</p>
+                      <p>{transaction.bank_name}</p>
                     </div>
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {transaction.account_name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {transaction.category}
@@ -126,16 +154,22 @@ export async function TransactionsTable({
                     {transaction.transaction_type}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {transaction.amount}{' '}
+                    {transaction.amount}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
                     {transaction.currency}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateButton
-                        href={`/dashboard/transaction/${transaction.transaction_id}/edit`}
+                        href={`/dashboard/transactions/${transaction.transaction_id}/edit`}
                       />
                       <DeleteButton
-                        id={transaction.transaction_id}
+                        action={deleteTransaction.bind(
+                          null,
+                          transaction.transaction_id,
+                          transaction.account_id
+                        )}
                       />
                     </div>
                   </td>

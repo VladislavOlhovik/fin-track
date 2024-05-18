@@ -1,17 +1,19 @@
-// import Pagination from '@/app/ui/invoices/pagination';
-import { CreateButton, Search } from '@/components';
+import {
+  CreateButton,
+  Pagination,
+  Search,
+} from '@/components';
 import { AccountsTable } from '@/components/accounts';
-import { lusitana } from '@/fonts';
+import { fetchAccountsPages } from '@/dbAPI/data';
 // import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 // import { Suspense } from 'react';
-// import { fetchInvoicesPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Accounts',
 };
 
-export default async function Accounts({
+export default async function Page({
   searchParams,
 }: {
   searchParams?: {
@@ -21,14 +23,12 @@ export default async function Accounts({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  // const totalPages = await fetchInvoicesPages(query);
-  const totalPages = 3;
+  const totalPages = await fetchAccountsPages(query);
+
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>
-          Accounts
-        </h1>
+        <h1 className="text-2xl">Accounts</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Search accounts..." />
@@ -44,7 +44,7 @@ export default async function Accounts({
       />
       {/* </Suspense> */}
       <div className="mt-5 flex w-full justify-center">
-        {/* <Pagination totalPages={totalPages} /> */}
+        <Pagination totalPages={totalPages} />
       </div>
     </div>
   );

@@ -42,9 +42,13 @@ export function UpdateButton({
   );
 }
 
-export function DeleteButton({ id }: { id?: number }) {
+export function DeleteButton({
+  action,
+}: {
+  action?: () => void;
+}) {
   return (
-    <form action={'deleteInvoiceWithId'}>
+    <form action={action}>
       <button className="rounded-md border p-2 hover:bg-red-200">
         <span className="sr-only">Delete</span>
         <DeleteIcon className="h-5" />

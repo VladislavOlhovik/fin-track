@@ -1,5 +1,6 @@
 import { DeleteButton, UpdateButton } from '@/components';
-import { getAccounts } from '@/API';
+import { deleteAccount } from '@/dbAPI/actions';
+import { fetchFilteredAccounts } from '@/dbAPI/data';
 
 export async function AccountsTable({
   query,
@@ -8,7 +9,10 @@ export async function AccountsTable({
   query: string;
   currentPage: number;
 }) {
-  const accounts = getAccounts();
+  const accounts = await fetchFilteredAccounts(
+    query,
+    currentPage
+  );
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -17,7 +21,7 @@ export async function AccountsTable({
             {accounts.map(account => (
               <div
                 key={account.account_id}
-                className="mb-2 w-full rounded-md bg-white p-4"
+                className={`mb-2 w-full rounded-md ${account.balance[0] === '-' ? 'bg-red-50' : 'bg-white'} p-4`}
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
@@ -40,7 +44,12 @@ export async function AccountsTable({
                     <UpdateButton
                       href={`/dashboard/account/${account.account_id}/edit`}
                     />
-                    <DeleteButton id={account.account_id} />
+                    <DeleteButton
+                      action={deleteAccount.bind(
+                        null,
+                        account.account_id
+                      )}
+                    />
                   </div>
                 </div>
               </div>
@@ -92,6 +101,7 @@ export async function AccountsTable({
                 <tr
                   key={account.account_id}
                   className={`w-full border-b py-3 text-sm last-of-type:border-none 
+                  ${account.balance[0] === '-' ? 'bg-red-50' : 'bg-white'}
                   [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg 
                   [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg`}
                 >
@@ -115,10 +125,13 @@ export async function AccountsTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateButton
-                        href={`/dashboard/account/${account.account_id}/edit`}
+                        href={`/dashboard/accounts/${account.account_id}/edit`}
                       />
                       <DeleteButton
-                        id={account.account_id}
+                        action={deleteAccount.bind(
+                          null,
+                          account.account_id
+                        )}
                       />
                     </div>
                   </td>

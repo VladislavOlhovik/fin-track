@@ -6,6 +6,7 @@ import {
   AccountIcon,
   HomeIcon,
   TransactionIcon,
+  TransferIcon,
 } from '@/components/icons';
 
 const links = [
@@ -24,6 +25,11 @@ const links = [
     href: '/dashboard/accounts',
     icon: <AccountIcon className="h-5" />,
   },
+  {
+    name: 'Make Transfer',
+    href: '/dashboard/transfer',
+    icon: <TransferIcon className="h-5" />,
+  },
 ];
 
 export default function NavLinks() {
@@ -37,7 +43,7 @@ export default function NavLinks() {
             key={link.name}
             href={link.href}
             className={`flex h-[48px] grow items-center 
-            justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium 
+            justify-center gap-2 rounded-md bg-gray-100 p-3 text-sm font-medium 
             hover:bg-sky-100 hover:text-blue-600
             md:flex-none md:justify-start md:p-2 md:px-3
               ${path === link.href ? 'bg-sky-100 text-blue-600' : ''}
