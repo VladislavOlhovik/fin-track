@@ -4,4 +4,6 @@ export {
   CreateButton,
   DeleteButton,
   UpdateButton,
+  Button,
+  AuthButton,
 } from './buttons';
