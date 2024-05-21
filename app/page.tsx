@@ -24,12 +24,11 @@ export default function Home() {
           </div>
         </div>
         <h1 className="text-center text-4xl">
-          FinTrack app
+          FinTrack App
         </h1>
         <h2 className="text-center text-2xl">
           keep your money ander control
         </h2>
-        {/* <WaterfallChart /> */}
         <DonutChart data={exampleDate} name="example" />
         <div className="flex justify-around">
           <Link href={'/signup'}>

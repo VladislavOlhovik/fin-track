@@ -85,8 +85,13 @@ export const excangeCurrency = (
   balance: number,
   currency: string,
   rates: ExchangeRatesType
-) => {
-  return balance / rates[currency];
+): number => {
+  const rate = rates[currency];
+  if (!rate)
+    throw new Error(
+      `No exchange rate found for currency: ${currency}`
+    );
+  return balance / rate;
 };
 
 const findAccountsByType = (
@@ -142,22 +147,23 @@ export const transformDataForCard = (
   };
 };
 
-export const transformDataForChart = (
+export const aggregateBalancesByBank = (
   accounts: AccountType[],
   ratesByCurrency: ExchangeRatesType
 ) => {
-  return accounts.map(el => {
-    return {
-      name: `${el.bank_name} ${el.account_name}`,
-      value: Number(
-        (
-          excangeCurrency(
-            el.balance,
-            el.currency,
-            ratesByCurrency
-          ) / 100
-        ).toFixed(2)
-      ),
-    };
+  const banks: Record<string, number> = {};
+  accounts.forEach(account => {
+    if (!(account.bank_name in banks)) {
+      banks[account.bank_name] = 0;
+    }
+    banks[account.bank_name] += excangeCurrency(
+      account.balance,
+      account.currency,
+      ratesByCurrency
+    );
   });
+  return Object.entries(banks).map(([name, value]) => ({
+    name,
+    value: Number((value / 100).toFixed(2)),
+  }));
 };

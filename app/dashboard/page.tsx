@@ -4,7 +4,7 @@ import {
   CardWrapper,
   LatestTransactions,
   MainCurrencyInput,
-  AmountByAccauntChart,
+  BalancesByBankChart,
 } from '@/components/dashboard';
 import { auth } from '@/auth';
 import { getDashboardData } from '@/dbAPI/data';
@@ -41,7 +41,7 @@ export default async function Page({
         <CardWrapper cardData={cardData} />
       </div>
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-        <AmountByAccauntChart data={chartData} />
+        <BalancesByBankChart data={chartData} />
         <LatestTransactions />
       </div>
     </main>

@@ -3,15 +3,14 @@ import { sql } from '@vercel/postgres';
 
 import {
   AccountType,
-  CardDataType,
   ITEMS_PER_PAGE,
   TransactionForTableType,
   TransactionType,
 } from '@/lib/definitions';
 import {
+  aggregateBalancesByBank,
   formatCurrency,
   transformDataForCard,
-  transformDataForChart,
 } from '@/lib/utils';
 import { auth } from '@/auth';
 
@@ -75,6 +74,7 @@ export async function fetchFilteredAccounts(
     accounts.currency ILIKE ${`%${query}%`} OR
     accounts.balance::text ILIKE ${`%${query}%`}
     )
+  ORDER BY accounts.bank_name
   LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
         `;
 
@@ -325,7 +325,7 @@ export const getDashboardData = async (
       ratesByCurrency,
       currency
     ),
-    chartData: transformDataForChart(
+    chartData: aggregateBalancesByBank(
       accounts,
       ratesByCurrency
     ),

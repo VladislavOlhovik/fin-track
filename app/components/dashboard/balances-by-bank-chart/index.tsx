@@ -1,7 +1,7 @@
-import { TotalAmountIcon } from '@/components/icons';
+import { BankIcon } from '@/components/icons';
 import { DonutChart } from '@/components/charts';
 
-export async function AmountByAccauntChart({
+export async function BalancesByBankChart({
   data,
 }: {
   data: { value: number; name: string }[];
@@ -9,7 +9,7 @@ export async function AmountByAccauntChart({
   return (
     <div className="w-full md:col-span-4">
       <h2 className="mb-4 text-xl md:text-2xl">
-        Total Amount of Money by Accounts
+        Balances by Bank
       </h2>
       <div className="rounded-xl bg-gray-200 p-4">
         <div className="mt-0  rounded-md bg-white md:gap-4">
@@ -20,12 +20,12 @@ export async function AmountByAccauntChart({
         </div>
         <div className="flex items-center pb-2 pt-6">
           <div>
-            <TotalAmountIcon className="h-8 w-8" />
+            <BankIcon className="h-8 w-8" />
           </div>
           <h3 className="ml-2 text-sm text-gray-500 ">
             The donut chart above shows the distribution of
-            total funds across various accounts. Each
-            segment represents a specific account.
+            total funds across various banks. Each segment
+            represents a specific bank.
           </h3>
         </div>
       </div>
