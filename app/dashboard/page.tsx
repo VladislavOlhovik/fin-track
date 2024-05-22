@@ -1,12 +1,14 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
+import { auth } from '@/auth';
 import {
   CardWrapper,
   LatestTransactions,
   MainCurrencyInput,
   BalancesByBankChart,
 } from '@/components/dashboard';
-import { auth } from '@/auth';
+import { DashboardSkeleton } from '@/components';
 import { getDashboardData } from '@/dbAPI/data';
 
 export const metadata: Metadata = {
@@ -21,8 +23,6 @@ export default async function Page({
   const currency = searchParams?.currency || 'USD';
 
   const userData = await auth();
-  const { cardData, chartData } =
-    await getDashboardData(currency);
 
   return (
     <main>
@@ -37,6 +37,25 @@ export default async function Page({
           <MainCurrencyInput currency={currency} />
         </div>
       </div>
+      <Suspense
+        key={currency}
+        fallback={<DashboardSkeleton />}
+      >
+        <Dashboard currency={currency} />
+      </Suspense>
+    </main>
+  );
+}
+
+const Dashboard = async ({
+  currency,
+}: {
+  currency: string;
+}) => {
+  const { cardData, chartData } =
+    await getDashboardData(currency);
+  return (
+    <>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <CardWrapper cardData={cardData} />
       </div>
@@ -44,6 +63,6 @@ export default async function Page({
         <BalancesByBankChart data={chartData} />
         <LatestTransactions />
       </div>
-    </main>
+    </>
   );
-}
+};

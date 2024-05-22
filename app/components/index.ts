@@ -6,6 +6,11 @@ export { SelectInput } from './select-input';
 export { DataListInput } from './datalist-input';
 export { Input } from './input';
 export {
+  TransactionsTableSkeleton,
+  AccountTableSkeleton,
+  DashboardSkeleton,
+} from './skeletons';
+export {
   CreateButton,
   DeleteButton,
   UpdateButton,

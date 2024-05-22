@@ -1,13 +1,14 @@
+import { Metadata } from 'next';
+import { Suspense } from 'react';
+
 import {
   CreateButton,
   Pagination,
   Search,
+  AccountTableSkeleton,
 } from '@/components';
 import { AccountsTable } from '@/components/accounts';
 import { fetchAccountsPages } from '@/dbAPI/data';
-// import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
-// import { Suspense } from 'react';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Accounts',
@@ -37,12 +38,15 @@ export default async function Page({
           href="/dashboard/accounts/create"
         />
       </div>
-      {/* <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}> */}
-      <AccountsTable
-        query={query}
-        currentPage={currentPage}
-      />
-      {/* </Suspense> */}
+      <Suspense
+        key={query + currentPage}
+        fallback={<AccountTableSkeleton />}
+      >
+        <AccountsTable
+          query={query}
+          currentPage={currentPage}
+        />
+      </Suspense>
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />
       </div>

@@ -1,15 +1,14 @@
+import { Metadata } from 'next';
+import { Suspense } from 'react';
+
 import {
   CreateButton,
   Pagination,
   Search,
+  TransactionsTableSkeleton,
 } from '@/components';
 import { TransactionsTable } from '@/components/transactions';
-import { lusitana } from '@/fonts';
 import { fetchTransactionsPages } from '@/dbAPI/data';
-// import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
-// import { Suspense } from 'react';
-// import { fetchInvoicesPages } from '@/app/lib/data';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Transactions',
@@ -38,12 +37,15 @@ export default async function Page({
           href="/dashboard/transactions/create"
         />
       </div>
-      {/* <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}> */}
-      <TransactionsTable
-        query={query}
-        currentPage={currentPage}
-      />
-      {/* </Suspense> */}
+      <Suspense
+        key={query + currentPage}
+        fallback={<TransactionsTableSkeleton />}
+      >
+        <TransactionsTable
+          query={query}
+          currentPage={currentPage}
+        />
+      </Suspense>
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />
       </div>

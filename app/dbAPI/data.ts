@@ -1,4 +1,3 @@
-import { unstable_noStore as noStore } from 'next/cache';
 import { sql } from '@vercel/postgres';
 
 import {
@@ -21,7 +20,6 @@ export const getUserId = async () => {
 
 export async function fetchLatestTransactions() {
   const user_id = await getUserId();
-  noStore();
   try {
     const data = await sql<TransactionForTableType>`
     SELECT t.*, a.account_name, a.bank_name, a.currency
@@ -52,7 +50,6 @@ export async function fetchFilteredAccounts(
   query: string,
   currentPage: number
 ) {
-  noStore();
   const user_id = await getUserId();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
   try {
@@ -95,7 +92,6 @@ export async function fetchFilteredAccounts(
 }
 
 export async function fetchAccountsPages(query: string) {
-  noStore();
   const user_id = await getUserId();
   try {
     const count = await sql`SELECT COUNT(*)
@@ -122,7 +118,6 @@ export async function fetchAccountsPages(query: string) {
 }
 
 export async function fetchAccountById(account_id: string) {
-  noStore();
   const user_id = await getUserId();
   try {
     const data = await sql<AccountType>`
@@ -153,7 +148,6 @@ export async function fetchAccountById(account_id: string) {
   }
 }
 export async function fetchAccounts() {
-  noStore();
   const user_id = await getUserId();
 
   try {
@@ -165,10 +159,10 @@ export async function fetchAccounts() {
     accounts.account_type,
     accounts.currency,
     accounts.balance
-  FROM accounts
-  WHERE
+    FROM accounts
+    WHERE
     accounts.user_id = ${user_id}
-        `;
+    ORDER BY accounts.bank_name`;
 
     const accounts = data.rows;
     return accounts;
@@ -182,7 +176,6 @@ export async function fetchFilteredTransactions(
   query: string,
   currentPage: number
 ) {
-  noStore();
   const user_id = await getUserId();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
@@ -237,7 +230,6 @@ export async function fetchFilteredTransactions(
 export async function fetchTransactionsPages(
   query: string
 ) {
-  noStore();
   const user_id = await getUserId();
   try {
     const count = await sql`SELECT COUNT(*)
@@ -268,7 +260,6 @@ export async function fetchTransactionsPages(
 export const fetchTransactionById = async (
   transaction_id: string
 ) => {
-  noStore();
   try {
     const data = await sql<TransactionType>`
     SELECT
@@ -315,7 +306,6 @@ export const fetchCurrencyRate = async (
 export const getDashboardData = async (
   currency: string
 ) => {
-  noStore();
   const ratesByCurrency = await fetchCurrencyRate(currency);
   const accounts = await fetchAccounts();
 

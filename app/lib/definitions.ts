@@ -23,6 +23,13 @@ export const majorCurrencies: string[] = [
 ];
 
 export const ITEMS_PER_PAGE = 6;
+export const getArrItemsPerPage = () => {
+  const array = [];
+  for (let i = 0; i < ITEMS_PER_PAGE; i++) {
+    array.push(i);
+  }
+  return array;
+};
 
 export const AccountKind = [
   'cash',
