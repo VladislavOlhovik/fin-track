@@ -134,6 +134,7 @@ export const deleteAccount = async (account_id: string) => {
     };
   }
   revalidatePath('/dashboard/accounts');
+  redirect('/dashboard/accounts');
 };
 
 export const deleteTransaction = async (

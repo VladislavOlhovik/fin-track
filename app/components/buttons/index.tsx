@@ -26,12 +26,7 @@ export function CreateButton({
   );
 }
 
-export function UpdateButton({
-  href,
-}: {
-  id?: number;
-  href: string;
-}) {
+export function UpdateButton({ href }: { href: string }) {
   return (
     <Link
       href={href}
@@ -44,12 +39,16 @@ export function UpdateButton({
 
 export function DeleteButton({
   action,
+  className,
 }: {
   action?: () => void;
+  className?: string;
 }) {
   return (
     <form action={action}>
-      <button className="rounded-md border p-2 hover:bg-red-200">
+      <button
+        className={`rounded-md border p-2 hover:bg-red-200 ${className}`}
+      >
         <span className="sr-only">Delete</span>
         <DeleteIcon className="h-5" />
       </button>

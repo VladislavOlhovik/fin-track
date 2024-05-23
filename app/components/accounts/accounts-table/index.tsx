@@ -127,12 +127,6 @@ export async function AccountsTable({
                       <UpdateButton
                         href={`/dashboard/accounts/${account.account_id}/edit`}
                       />
-                      <DeleteButton
-                        action={deleteAccount.bind(
-                          null,
-                          account.account_id
-                        )}
-                      />
                     </div>
                   </td>
                 </tr>
