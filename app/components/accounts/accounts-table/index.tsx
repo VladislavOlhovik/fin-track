@@ -66,6 +66,7 @@ export async function AccountsTable({
                   (column, index) => {
                     return (
                       <th
+                        key={index}
                         scope="col"
                         className={`${index === 0 ? 'px-4 sm:pl-6' : 'px-3'} py-5 font-medium`}
                       >
