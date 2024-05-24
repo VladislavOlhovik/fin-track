@@ -40,8 +40,7 @@ export async function fetchLatestTransactions() {
       };
     });
     return transactions;
-  } catch (err) {
-    console.error('Database Error:', err);
+  } catch (error) {
     throw new Error('Failed to fetch Latest transactions.');
   }
 }
@@ -72,8 +71,7 @@ export async function fetchFilteredAccounts(
     accounts.balance::text ILIKE ${`%${query}%`}
     )
   ORDER BY accounts.bank_name
-  LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
-        `;
+  LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}`;
 
     const accounts = data.rows.map(account => {
       return {
@@ -85,8 +83,7 @@ export async function fetchFilteredAccounts(
       };
     });
     return accounts;
-  } catch (err) {
-    console.error('Database Error:', err);
+  } catch (error) {
     throw new Error('Failed to fetch filtered accounts.');
   }
 }
@@ -110,7 +107,6 @@ export async function fetchAccountsPages(query: string) {
     );
     return totalPages;
   } catch (error) {
-    console.error('Database Error:', error);
     throw new Error(
       'Failed to fetch total number of accounts.'
     );
@@ -132,8 +128,7 @@ export async function fetchAccountById(account_id: string) {
   FROM accounts
   WHERE
     accounts.user_id = ${user_id} AND 
-    accounts.account_id = ${account_id}
-        `;
+    accounts.account_id = ${account_id}`;
 
     const account = data.rows.map(account => {
       return {
@@ -141,15 +136,17 @@ export async function fetchAccountById(account_id: string) {
         balance: account.balance / 100,
       };
     });
+    if (account.length === 0) {
+      throw new Error('Account by id not found');
+    }
     return account[0];
-  } catch (err) {
-    console.error('Database Error:', err);
+  } catch (error) {
     throw new Error('Failed to fetch account by id.');
   }
 }
+
 export async function fetchAccounts() {
   const user_id = await getUserId();
-
   try {
     const data = await sql<AccountType>`
     SELECT
@@ -166,8 +163,7 @@ export async function fetchAccounts() {
 
     const accounts = data.rows;
     return accounts;
-  } catch (err) {
-    console.error('Database Error:', err);
+  } catch (error) {
     throw new Error('Failed to fetch accounts.');
   }
 }
@@ -206,8 +202,7 @@ export async function fetchFilteredTransactions(
        a.bank_name ILIKE ${`%${query}%`}
        )
     ORDER BY t.transaction_date DESC
-    LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
-`;
+    LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}`;
 
     const transactions = data.rows.map(transaction => {
       return {
@@ -219,8 +214,7 @@ export async function fetchFilteredTransactions(
       };
     });
     return transactions;
-  } catch (err) {
-    console.error('Database Error:', err);
+  } catch (error) {
     throw new Error(
       'Failed to fetch Filtered transactions.'
     );
@@ -242,15 +236,13 @@ export async function fetchTransactionsPages(
         t.description ILIKE ${`%${query}%`} OR
         t.category ILIKE ${`%${query}%`} OR
         t.amount::text ILIKE ${`%${query}%`}
-      )
-  `;
+      )`;
+
     const totalPages = Math.ceil(
       Number(count.rows[0].count) / ITEMS_PER_PAGE
     );
-
     return totalPages;
   } catch (error) {
-    console.error('Database Error:', error);
     throw new Error(
       'Failed to fetch total number of transactions.'
     );
@@ -271,8 +263,7 @@ export const fetchTransactionById = async (
     transactions.category
   FROM transactions
   WHERE
-  transactions.transaction_id = ${transaction_id}
-        `;
+  transactions.transaction_id = ${transaction_id}`;
 
     const transaction = data.rows.map(tr => {
       return {
@@ -280,9 +271,11 @@ export const fetchTransactionById = async (
         amount: tr.amount / 100,
       };
     });
+    if (transaction.length === 0) {
+      throw new Error('Transaction by id not found');
+    }
     return transaction[0];
-  } catch (err) {
-    console.error('Database Error:', err);
+  } catch (error) {
     throw new Error('Failed to fetch transaction by id.');
   }
 };
@@ -299,15 +292,17 @@ export const fetchCurrencyRate = async (
       return rate.rates;
     }
   } catch (error) {
-    console.log(error);
+    throw new Error('Failed to fetch currency rates');
   }
 };
 
 export const getDashboardData = async (
   currency: string
 ) => {
-  const ratesByCurrency = await fetchCurrencyRate(currency);
-  const accounts = await fetchAccounts();
+  const [ratesByCurrency, accounts] = await Promise.all([
+    fetchCurrencyRate(currency),
+    fetchAccounts(),
+  ]);
 
   return {
     cardData: transformDataForCard(

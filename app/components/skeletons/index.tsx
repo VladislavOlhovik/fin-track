@@ -1,4 +1,8 @@
-import { getArrItemsPerPage } from '@/lib/definitions';
+import {
+  accountsTableColumns,
+  getArrItemsPerPage,
+  transactionsTableColumns,
+} from '@/lib/definitions';
 
 const arrayItemsPerPage = getArrItemsPerPage();
 
@@ -105,54 +109,19 @@ export function TransactionsTableSkeleton() {
           <table className="hidden min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
-                <th
-                  scope="col"
-                  className="px-4 py-5 font-medium sm:pl-6"
-                >
-                  Bank
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-5 font-medium"
-                >
-                  Account
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-5 font-medium"
-                >
-                  Category
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-5 font-medium"
-                >
-                  Description
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-5 font-medium"
-                >
-                  Date
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-5 font-medium"
-                >
-                  Type
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-5 font-medium"
-                >
-                  Amount
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-5 font-medium"
-                >
-                  Currency
-                </th>
+                {transactionsTableColumns.map(
+                  (colunm, index) => {
+                    return (
+                      <th
+                        key={index}
+                        scope="col"
+                        className={`${index === 0 ? 'px-4 sm:pl-6' : 'px-3'} py-5 font-medium`}
+                      >
+                        {colunm}
+                      </th>
+                    );
+                  }
+                )}
               </tr>
             </thead>
             <tbody className="bg-white">
@@ -172,39 +141,16 @@ export function TransactionsTableSkeleton() {
 function TransactionsTableRowSkeleton() {
   return (
     <tr className="w-full border-b border-gray-100 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
-      {/* Bank */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-      {/* Account */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-
-      {/* Category */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-      {/* Description */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-      {/* Date */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-      {/* Type */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-      {/* Amount */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-      {/* Currency */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
+      {transactionsTableColumns.map(column => {
+        return (
+          <td
+            key={column}
+            className="whitespace-nowrap px-3 py-3"
+          >
+            <div className="h-6 w-16 rounded bg-gray-100"></div>
+          </td>
+        );
+      })}
       <td className="whitespace-nowrap py-3 pl-6 pr-3">
         <div className="flex justify-end gap-3">
           <div className="h-[38px] w-[38px] rounded bg-gray-100"></div>
@@ -230,36 +176,19 @@ export function AccountTableSkeleton() {
           <table className="hidden min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
-                <th
-                  scope="col"
-                  className="px-4 py-5 font-medium sm:pl-6"
-                >
-                  Bank
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-5 font-medium"
-                >
-                  Account Name
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-5 font-medium"
-                >
-                  Account type
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-5 font-medium"
-                >
-                  Balance
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-5 font-medium"
-                >
-                  Currency
-                </th>
+                {accountsTableColumns.map(
+                  (column, index) => {
+                    return (
+                      <th
+                        key={column}
+                        scope="col"
+                        className={`${index === 0 ? 'px-4 sm:pl-6' : 'px-3'} py-5 font-medium`}
+                      >
+                        {column}
+                      </th>
+                    );
+                  }
+                )}
                 <th
                   scope="col"
                   className="relative pb-4 pl-3 pr-6 pt-2 sm:pr-6"
@@ -307,26 +236,18 @@ function AccountMobileSkeleton() {
 function TableRowSkeleton() {
   return (
     <tr className="w-full border-b border-gray-100 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
-      {/* Bank */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-20 rounded bg-gray-100"></div>
-      </td>
-      {/* Account Name */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-      {/* Account type */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-      {/* Balance */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
-      {/* Currency */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
-      </td>
+      {accountsTableColumns.map((column, index) => {
+        return (
+          <td
+            className="whitespace-nowrap px-3 py-3"
+            key={column}
+          >
+            <div
+              className={`${index === 0 ? 'w-20' : 'w-16'} h-6 rounded bg-gray-100`}
+            ></div>
+          </td>
+        );
+      })}
       <td className="whitespace-nowrap py-3 pl-6 pr-3">
         <div className="flex justify-end gap-3">
           <div className="h-[38px] w-[38px] rounded bg-gray-100"></div>

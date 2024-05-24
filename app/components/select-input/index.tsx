@@ -1,17 +1,10 @@
 import { ReactNode } from 'react';
 
-export const SelectInput = ({
-  title,
-  placeholder,
-  options,
-  errorNode,
-  selectName,
-  icon,
-  defaultValue,
-}: {
+interface SelectInputProps
+  extends React.SelectHTMLAttributes<HTMLSelectElement> {
   title: string;
+  selectName: string;
   placeholder: string;
-  defaultValue?: any;
   options:
     | string[]
     | {
@@ -21,10 +14,19 @@ export const SelectInput = ({
         account_type: string;
         currency: string;
       }[];
-  selectName: string;
   errorNode?: ReactNode;
   icon: ReactNode;
-}) => {
+}
+
+export const SelectInput = ({
+  title,
+  selectName,
+  options,
+  placeholder,
+  icon,
+  errorNode,
+  ...props
+}: SelectInputProps) => {
   return (
     <div className="mb-4">
       <label
@@ -38,31 +40,32 @@ export const SelectInput = ({
           id={selectName}
           name={selectName}
           className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-          defaultValue={defaultValue}
+          {...props}
         >
           <option value="" disabled>
             {placeholder}
           </option>
           {options.map(option => {
             if (typeof option !== 'string') {
+              const {
+                account_id,
+                account_name,
+                account_type,
+                bank_name,
+                currency,
+              } = option;
               return (
-                <option
-                  key={option.account_id}
-                  value={option.account_id}
-                >
-                  {option?.bank_name} -{' '}
-                  {option?.account_type} -{' '}
-                  {option?.account_name} -{' '}
-                  {option?.currency}
-                </option>
-              );
-            } else {
-              return (
-                <option key={option} value={option}>
-                  {option}
+                <option key={account_id} value={account_id}>
+                  {bank_name} - {account_type} -{' '}
+                  {account_name} - {currency}
                 </option>
               );
             }
+            return (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            );
           })}
         </select>
         {icon}

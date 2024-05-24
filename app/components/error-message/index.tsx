@@ -1,10 +1,12 @@
+interface ErrorMessageProps {
+  errors?: string[] | undefined;
+  errorMessage?: string | undefined | null;
+}
+
 export const ErrorMessage = ({
   errors,
   errorMessage,
-}: {
-  errors?: string[] | undefined;
-  errorMessage?: string | undefined | null;
-}) => {
+}: ErrorMessageProps) => {
   return (
     <>
       {errors &&

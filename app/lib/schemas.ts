@@ -16,7 +16,9 @@ export const TransactionFormSchema = z.object({
   account_id: z.string({
     invalid_type_error: 'Please choose an Account',
   }),
-  amount: z.coerce.number().nonnegative(),
+  amount: z.coerce.number().positive({
+    message: 'Amount must be greater than 0',
+  }),
   transaction_type: z.enum(['expense', 'income'], {
     invalid_type_error: 'Please choose a Type',
   }),
@@ -38,7 +40,9 @@ export const TransferFormSchema = z.object({
   description: z
     .string()
     .min(1, 'Please enter a description'),
-  amount: z.coerce.number().nonnegative(),
+  amount: z.coerce.number().positive({
+    message: 'Amount must be greater than 0',
+  }),
 });
 
 export const NewUserSchema = z.object({

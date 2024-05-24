@@ -54,7 +54,7 @@ export function AccountForm({
         <Input
           title="Bank Name"
           inputName="bank_name"
-          inputType="text"
+          type="text"
           placeholder="Enter Bank Name"
           defaultValue={
             isActionCreate ? '' : account.bank_name
@@ -72,7 +72,7 @@ export function AccountForm({
         <Input
           title="Account Name"
           inputName="account_name"
-          inputType="text"
+          type="text"
           placeholder="Enter Account Name"
           defaultValue={
             isActionCreate ? '' : account.account_name
@@ -109,7 +109,7 @@ export function AccountForm({
           title="Currency"
           inputName="currency"
           placeholder="Currency"
-          list={majorCurrencies}
+          options={majorCurrencies}
           defaultValue={
             isActionCreate ? '' : account.currency
           }
@@ -125,7 +125,7 @@ export function AccountForm({
           title="Balance"
           inputName="balance"
           placeholder="Enter amount"
-          inputType="number"
+          type="number"
           step="0.01"
           defaultValue={
             isActionCreate ? '' : account.balance

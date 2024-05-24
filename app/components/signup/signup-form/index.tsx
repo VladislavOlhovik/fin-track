@@ -1,11 +1,10 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormState } from 'react-dom';
 import Link from 'next/link';
 
 import {
   AuthButton,
-  Button,
   ErrorMessage,
   Input,
 } from '@/components';
@@ -35,14 +34,14 @@ export function SignUpForm() {
           <h1 className="mb-3 text-2xl">
             Please create user to continue.
           </h1>
-          <Link className="underline" href={'/signin'}>
+          <Link className="underline" href="/signin">
             Or Sign In
           </Link>
           <div className="w-full mt-4">
             <Input
               title="User Name"
               placeholder="Enter your name"
-              inputType="name"
+              type="name"
               inputName="name"
               icon={
                 <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -57,7 +56,8 @@ export function SignUpForm() {
               title="Email"
               inputName="email"
               placeholder="Enter your email address"
-              inputType="email"
+              autoComplete="username"
+              type="email"
               icon={
                 <EmailIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               }
@@ -70,8 +70,9 @@ export function SignUpForm() {
             <Input
               title="Password"
               inputName="password"
-              inputType="password"
+              type="password"
               placeholder="Enter password"
+              autoComplete="current-password"
               minLength={6}
               icon={
                 <PasswordIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -84,7 +85,7 @@ export function SignUpForm() {
             />
           </div>
           <AuthButton>
-            Create user{' '}
+            <p>Create user</p>
             <RightArrowIcon className="ml-auto h-5 w-5 fill-white" />
           </AuthButton>
           <div

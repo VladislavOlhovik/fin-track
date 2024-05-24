@@ -7,10 +7,10 @@ interface DonutChartProps {
   name: string;
 }
 
-export const DonutChart: React.FC<DonutChartProps> = ({
+export const DonutChart = ({
   data,
   name,
-}) => {
+}: DonutChartProps) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

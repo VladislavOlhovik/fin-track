@@ -47,7 +47,7 @@ export function EditTransForm({
           inputName="category"
           defaultValue={transaction.category}
           placeholder="Enter category"
-          list={categoryOptions}
+          options={categoryOptions}
           icon={
             <CategoryIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
           }
@@ -59,7 +59,7 @@ export function EditTransForm({
         <Input
           title="Description"
           inputName="description"
-          inputType="text"
+          type="text"
           defaultValue={transaction.description}
           placeholder="Enter a description"
           icon={

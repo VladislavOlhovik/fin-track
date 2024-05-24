@@ -81,7 +81,7 @@ export const amountToCents = (num: number) => {
   return Number((num * 100).toFixed(2));
 };
 
-export const excangeCurrency = (
+export const exchangeCurrency = (
   balance: number,
   currency: string,
   rates: ExchangeRatesType
@@ -112,7 +112,7 @@ const countTotalAmount = (
   return formatCurrency(
     accounts.reduce((acc, { balance, currency }) => {
       return (acc =
-        acc + excangeCurrency(balance, currency, rates));
+        acc + exchangeCurrency(balance, currency, rates));
     }, 0),
     currency
   );
@@ -151,17 +151,20 @@ export const aggregateBalancesByBank = (
   accounts: AccountType[],
   ratesByCurrency: ExchangeRatesType
 ) => {
-  const banks: Record<string, number> = {};
-  accounts.forEach(account => {
-    if (!(account.bank_name in banks)) {
-      banks[account.bank_name] = 0;
-    }
-    banks[account.bank_name] += excangeCurrency(
-      account.balance,
-      account.currency,
-      ratesByCurrency
-    );
-  });
+  const banks = accounts.reduce<Record<string, number>>(
+    (acc, { bank_name, balance, currency }) => {
+      if (!acc[bank_name]) {
+        acc[bank_name] = 0;
+      }
+      acc[bank_name] += exchangeCurrency(
+        balance,
+        currency,
+        ratesByCurrency
+      );
+      return acc;
+    },
+    {}
+  );
   return Object.entries(banks).map(([name, value]) => ({
     name,
     value: Number((value / 100).toFixed(2)),

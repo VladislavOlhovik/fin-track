@@ -1,20 +1,22 @@
 'use client';
 import Link from 'next/link';
+import { useFormStatus } from 'react-dom';
 
 import {
   DeleteIcon,
   EditIcon,
   PlusIcon,
 } from '@/components/icons';
-import { useFormStatus } from 'react-dom';
+
+interface CreateButtonProps {
+  title: string;
+  href: string;
+}
 
 export function CreateButton({
   title,
   href,
-}: {
-  title: string;
-  href: string;
-}) {
+}: CreateButtonProps) {
   return (
     <Link
       href={href}
@@ -37,13 +39,15 @@ export function UpdateButton({ href }: { href: string }) {
   );
 }
 
+interface DeleteButtonProps {
+  action?: () => void;
+  className?: string;
+}
+
 export function DeleteButton({
   action,
   className,
-}: {
-  action?: () => void;
-  className?: string;
-}) {
+}: DeleteButtonProps) {
   return (
     <form action={action}>
       <button

@@ -1,29 +1,20 @@
 import { ReactNode } from 'react';
 
+interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  title: string;
+  inputName: string;
+  icon: ReactNode;
+  errorNode?: ReactNode;
+}
+
 export const Input = ({
   title,
-  errorNode,
   inputName,
   icon,
-  inputType,
-  ...rest
-}: {
-  title: string;
-  placeholder: string;
-  inputName: string;
-  inputType:
-    | 'number'
-    | 'text'
-    | 'name'
-    | 'email'
-    | 'password';
-  icon: ReactNode;
-  step?: string;
-  errorNode?: ReactNode;
-  defaultValue?: string | number;
-  minLength?: number;
-  required?: boolean;
-}) => {
+  errorNode,
+  ...props
+}: InputProps) => {
   return (
     <div className="mb-4">
       <label
@@ -35,10 +26,9 @@ export const Input = ({
       <div className="relative mt-2 rounded-md">
         <div className="relative">
           <input
+            {...props}
             id={inputName}
             name={inputName}
-            type={inputType}
-            {...rest}
             aria-describedby="customer-error"
             className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
           />

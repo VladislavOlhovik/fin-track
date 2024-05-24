@@ -1,10 +1,11 @@
+import { ReactNode } from 'react';
+
 import {
   CashIcon,
   TotalAmountIcon,
   InvestmentIcon,
   CreditIcon,
 } from '@/components/icons';
-import { ReactNode } from 'react';
 import { CardDataType } from '@/lib/definitions';
 
 const cardsMap = [
@@ -51,15 +52,13 @@ export async function CardWrapper({
   );
 }
 
-export function Card({
-  title,
-  value,
-  icon,
-}: {
+interface CardProps {
   title: string;
-  value: number | string;
+  value: string;
   icon: ReactNode;
-}) {
+}
+
+export function Card({ title, value, icon }: CardProps) {
   return (
     <div className="rounded-xl bg-gray-200 p-2 shadow-sm">
       <div className="flex p-4">
@@ -68,7 +67,9 @@ export function Card({
           {title}
         </h3>
       </div>
-      <p className="truncate rounded-xl bg-white px-4 py-8 text-center text-2xl">
+      <p
+        className={`truncate rounded-xl ${value[0] === '-' ? 'bg-red-100' : 'bg-white'} px-4 py-8 text-center text-2xl`}
+      >
         {value}
       </p>
     </div>

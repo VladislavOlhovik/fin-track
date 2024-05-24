@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-interface Breadcrumb {
+interface BreadcrumbProps {
   label: string;
   href: string;
   active?: boolean;
@@ -9,7 +9,7 @@ interface Breadcrumb {
 export function Breadcrumbs({
   breadcrumbs,
 }: {
-  breadcrumbs: Breadcrumb[];
+  breadcrumbs: BreadcrumbProps[];
 }) {
   return (
     <nav aria-label="Breadcrumb" className="mb-6 block">

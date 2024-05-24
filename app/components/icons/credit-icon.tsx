@@ -5,29 +5,13 @@ export const CreditIcon = (
 ) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    xmlSpace="preserve"
     viewBox="0 0 32 32"
     {...props}
   >
-    <path
-      fill="none"
-      stroke="#000"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeMiterlimit={10}
-      strokeWidth={2}
-      d="M20 14h0c-1.1 0-2-.9-2-2V8c0-1.1.9-2 2-2h0c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2z"
-    />
-    <circle cx={25.5} cy={6.5} r={1.5} />
-    <circle cx={29.5} cy={13.5} r={1.5} />
-    <path
-      fill="none"
-      stroke="#000"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeMiterlimit={10}
-      strokeWidth={2}
-      d="m30 6-5 8M15 6H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h24c1.1 0 2-.9 2-2v-7M6 20h2M12 20h2M18 20h2M24 20h2M2 10h13"
-    />
+    <title />
+    <g data-name="Layer 2">
+      <path d="M6.57 20.59H10a.51.51 0 0 0 .5-.5v-2.45a.5.5 0 0 0-.5-.5H6.57a.5.5 0 0 0-.5.5v2.45a.51.51 0 0 0 .5.5ZM6.57 15.68H10a.5.5 0 0 0 0-1H6.57a.5.5 0 0 0 0 1ZM8.29 22.05H6.57a.5.5 0 0 0-.5.5.51.51 0 0 0 .5.5h1.72a.51.51 0 0 0 .5-.5.5.5 0 0 0-.5-.5ZM12 22.05h-1.71a.5.5 0 0 0-.5.5.5.5 0 0 0 .5.5H12a.5.5 0 0 0 .5-.5.5.5 0 0 0-.5-.5ZM15.73 22H14a.5.5 0 0 0-.5.5.51.51 0 0 0 .5.5h1.73a.5.5 0 0 0 .5-.5.51.51 0 0 0-.5-.5ZM19.43 22h-1.72a.49.49 0 0 0-.49.5.5.5 0 0 0 .5.5h1.71a.5.5 0 0 0 .5-.5.5.5 0 0 0-.5-.5Z" />
+      <path d="M28 6.5H9.14a.5.5 0 0 0-.5.5v5.23H4a.5.5 0 0 0-.5.5V25a.5.5 0 0 0 .5.5h19.71a.49.49 0 0 0 .36-.15.5.5 0 0 0 .14-.35v-4.41H28a.5.5 0 0 0 .5-.5V7a.5.5 0 0 0-.5-.5Zm-4.79 18H4.5V13.23h18.71V24.5Zm4.29-4.91h-3.29v-6.86a.5.5 0 0 0-.5-.5H9.64v-1h17.87ZM9.66 8.5v-1H27.5v1.13Z" />
+    </g>
   </svg>
 );

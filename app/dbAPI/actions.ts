@@ -113,7 +113,6 @@ export async function updateAccount(
     WHERE account_id = ${account_id}
     `;
   } catch (error) {
-    console.log(error);
     return {
       message: 'Database Error: Failed to Update Account.',
     };
@@ -166,7 +165,6 @@ export const deleteTransaction = async (
     await sql`COMMIT;`;
   } catch (error) {
     await sql`ROLLBACK;`;
-    console.log(error);
     return {
       message:
         'Database Error: Failed to Delete Transaction.',
@@ -228,7 +226,6 @@ export async function createTransaction(
     await sql`COMMIT;`;
   } catch (error) {
     await sql`ROLLBACK;`;
-    console.log(error);
     return {
       message:
         'Database Error: Failed to Create Transaction.',
@@ -265,7 +262,6 @@ export const updateTransaction = async (
     WHERE transaction_id = ${transaction_id};
     `;
   } catch (error) {
-    console.log(error);
     return {
       message:
         'Database Error: Failed to Update Transaction.',
@@ -337,7 +333,6 @@ export const makeTransfer = async (
     await sql`COMMIT;`;
   } catch (error) {
     await sql`ROLLBACK;`;
-    console.log(error);
     return {
       message: 'Database Error: Failed to make transfer.',
     };

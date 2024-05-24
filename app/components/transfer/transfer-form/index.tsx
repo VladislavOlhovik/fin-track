@@ -71,7 +71,7 @@ export function TransferForm({
         <Input
           title="Description"
           placeholder="Enter a description"
-          inputType="text"
+          type="text"
           inputName="description"
           icon={
             <DescriptionIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
@@ -86,9 +86,9 @@ export function TransferForm({
         <Input
           title="Amount"
           placeholder="Enter an amount"
-          inputType="number"
+          type="number"
           inputName="amount"
-          step={'0.01'}
+          step="0.01"
           icon={
             <CoinIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           }

@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { generatePagination } from '@/lib/utils';
 import {
   usePathname,
   useSearchParams,
 } from 'next/navigation';
+
+import { generatePagination } from '@/lib/utils';
 import { LeftArrowIcon, RightArrowIcon } from '../icons';
 
 export function Pagination({
@@ -71,17 +72,19 @@ export function Pagination({
   );
 }
 
+interface PaginationNumberProps {
+  page: number | string;
+  href: string;
+  position?: 'first' | 'last' | 'middle' | 'single';
+  isActive: boolean;
+}
+
 function PaginationNumber({
   page,
   href,
   isActive,
   position,
-}: {
-  page: number | string;
-  href: string;
-  position?: 'first' | 'last' | 'middle' | 'single';
-  isActive: boolean;
-}) {
+}: PaginationNumberProps) {
   const className = `flex h-10 w-10 items-center justify-center text-sm border 
   ${
     position === 'first' || position === 'single'
@@ -112,15 +115,17 @@ function PaginationNumber({
   );
 }
 
+interface PaginationArrowProps {
+  href: string;
+  direction: 'left' | 'right';
+  isDisabled?: boolean;
+}
+
 function PaginationArrow({
   href,
   direction,
   isDisabled,
-}: {
-  href: string;
-  direction: 'left' | 'right';
-  isDisabled?: boolean;
-}) {
+}: PaginationArrowProps) {
   const className = `
     flex h-10 w-10 items-center justify-center rounded-md border
     ${isDisabled ? 'pointer-events-none text-gray-300' : ''}

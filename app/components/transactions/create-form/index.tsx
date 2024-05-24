@@ -60,9 +60,9 @@ export function CreateTransForm({
         <DataListInput
           title="Category"
           inputName="category"
-          defaultValue={''}
+          defaultValue=""
           placeholder="Enter category"
-          list={categoryOptions}
+          options={categoryOptions}
           icon={
             <CategoryIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
           }
@@ -74,7 +74,7 @@ export function CreateTransForm({
         <Input
           title="Description"
           inputName="description"
-          inputType="text"
+          type="text"
           placeholder="Enter a description"
           icon={
             <DescriptionIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -135,7 +135,7 @@ export function CreateTransForm({
           title="Amount"
           placeholder="Enter amount"
           inputName="amount"
-          inputType="number"
+          type="number"
           step="0.01"
           icon={
             <CoinIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />

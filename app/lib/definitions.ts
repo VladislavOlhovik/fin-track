@@ -40,6 +40,25 @@ export const AccountKind = [
 
 export const categoryOptions = ['bussines', 'personal'];
 
+export const accountsTableColumns = [
+  'Bank',
+  'Account Name',
+  'Account type',
+  'Balance',
+  'Currency',
+];
+
+export const transactionsTableColumns = [
+  'Bank',
+  'Account',
+  'Category',
+  'Description',
+  'Date',
+  'Type',
+  'Amount',
+  'Currency',
+];
+
 export type UserType = {
   id: string;
   name: string;

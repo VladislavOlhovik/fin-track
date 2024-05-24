@@ -21,18 +21,19 @@ export function SignInForm() {
   return (
     <form action={dispatch} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-100 px-6 pb-4 pt-8">
-        <h1 className={'mb-3 text-2xl'}>
+        <h1 className="mb-3 text-2xl">
           Please Sign in to continue.
         </h1>
-        <Link className="underline" href={'/signup'}>
+        <Link className="underline" href="/signup">
           Or create New Account
         </Link>
         <div className="w-full mt-4">
           <Input
             title="Email"
             inputName="email"
-            inputType="email"
+            type="email"
             placeholder="Enter your email address"
+            autoComplete="username"
             required={true}
             icon={
               <EmailIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -41,8 +42,9 @@ export function SignInForm() {
           <Input
             title="Password"
             inputName="password"
-            inputType="password"
+            type="password"
             placeholder="Enter password"
+            autoComplete="current-password"
             minLength={6}
             required={true}
             icon={
@@ -51,7 +53,7 @@ export function SignInForm() {
           />
         </div>
         <AuthButton>
-          Sign in{' '}
+          <p>Sign in</p>
           <RightArrowIcon className="ml-auto h-5 w-5 fill-white" />
         </AuthButton>
         <div
