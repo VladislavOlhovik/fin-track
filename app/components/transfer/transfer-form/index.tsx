@@ -14,17 +14,20 @@ import {
   CoinIcon,
   DescriptionIcon,
 } from '@/components/icons';
+
 import {
   AccountType,
   TransferStateType,
 } from '@/lib/definitions';
 import { makeTransfer } from '@/dbAPI/actions';
 
+interface TransferFormProps {
+  accounts: AccountType[];
+}
+
 export function TransferForm({
   accounts,
-}: {
-  accounts: AccountType[];
-}) {
+}: TransferFormProps) {
   const initialState: TransferStateType = {
     message: null,
     errors: {},

@@ -20,11 +20,15 @@ import {
   categoryOptions,
 } from '@/lib/definitions';
 
+interface EditTransFormProps {
+  transaction: TransactionType;
+  backPath: string;
+}
+
 export function EditTransForm({
   transaction,
-}: {
-  transaction: TransactionType;
-}) {
+  backPath,
+}: EditTransFormProps) {
   const initialState: TransactionUpdateStateType = {
     message: null,
     errors: {},
@@ -33,7 +37,8 @@ export function EditTransForm({
   const [state, dispatch] = useFormState(
     updateTransaction.bind(
       null,
-      transaction.transaction_id
+      transaction.transaction_id,
+      backPath
     ),
     initialState
   );
@@ -75,7 +80,7 @@ export function EditTransForm({
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/transactions"
+          href={backPath}
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancel

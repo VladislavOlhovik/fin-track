@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from 'next/cache';
 import { sql } from '@vercel/postgres';
 
 import {
@@ -7,8 +8,10 @@ import {
   TransactionType,
 } from '@/lib/definitions';
 import {
+  aggregateAccountChangeData,
   aggregateBalancesByBank,
   formatCurrency,
+  formatDateToLocal,
   transformDataForCard,
 } from '@/lib/utils';
 import { auth } from '@/auth';
@@ -114,21 +117,15 @@ export async function fetchAccountsPages(query: string) {
 }
 
 export async function fetchAccountById(account_id: string) {
+  noStore();
   const user_id = await getUserId();
   try {
     const data = await sql<AccountType>`
-    SELECT
-    accounts.account_id,
-    accounts.user_id,
-    accounts.bank_name,
-    accounts.account_name,
-    accounts.account_type,
-    accounts.currency,
-    accounts.balance
-  FROM accounts
-  WHERE
-    accounts.user_id = ${user_id} AND 
-    accounts.account_id = ${account_id}`;
+    SELECT *
+    FROM accounts
+    WHERE
+      accounts.user_id = ${user_id} AND 
+      accounts.account_id = ${account_id}`;
 
     const account = data.rows.map(account => {
       return {
@@ -211,12 +208,103 @@ export async function fetchFilteredTransactions(
           transaction.amount,
           transaction.currency
         ),
+        transaction_date: formatDateToLocal(
+          transaction.transaction_date
+        ),
       };
     });
     return transactions;
   } catch (error) {
     throw new Error(
       'Failed to fetch Filtered transactions.'
+    );
+  }
+}
+
+export async function fetchFilteredTransactionsByAcc(
+  query: string,
+  currentPage: number,
+  account_id: string
+) {
+  const user_id = await getUserId();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const data = await sql<TransactionForTableType>`
+    SELECT
+       t.transaction_id,
+       t.account_id,
+       t.amount,
+       t.transaction_type,
+       t.transaction_date,
+       t.description,
+       t.category,
+       a.account_name,
+       a.bank_name,
+       a.currency
+    FROM transactions t
+    JOIN accounts a ON t.account_id = a.account_id
+    WHERE
+       a.user_id = ${user_id} AND
+       t.account_id = ${account_id} AND (
+       t.transaction_type ILIKE ${`%${query}%`} OR
+       t.transaction_date::text ILIKE ${`%${query}%`} OR
+       t.description ILIKE ${`%${query}%`} OR
+       t.category ILIKE ${`%${query}%`} OR
+       t.amount::text ILIKE ${`%${query}%`} OR
+       a.account_name ILIKE ${`%${query}%`} OR
+       a.currency ILIKE ${`%${query}%`} OR
+       a.bank_name ILIKE ${`%${query}%`}
+       )
+    ORDER BY t.transaction_date DESC
+    LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}`;
+
+    const transactions = data.rows.map(transaction => {
+      return {
+        ...transaction,
+        amount: formatCurrency(
+          transaction.amount,
+          transaction.currency
+        ),
+        transaction_date: formatDateToLocal(
+          transaction.transaction_date
+        ),
+      };
+    });
+    return transactions;
+  } catch (error) {
+    throw new Error(
+      'Failed to fetch Filtered transactions by account.'
+    );
+  }
+}
+
+export async function fetchTransactionsByAccPages(
+  query: string,
+  account_id: string
+) {
+  const user_id = await getUserId();
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM transactions t
+    JOIN accounts a ON t.account_id = a.account_id
+    WHERE
+      a.user_id = ${user_id} AND 
+      t.account_id = ${account_id} AND (
+        t.transaction_type ILIKE ${`%${query}%`} OR
+        t.transaction_date::text ILIKE ${`%${query}%`} OR
+        t.description ILIKE ${`%${query}%`} OR
+        t.category ILIKE ${`%${query}%`} OR
+        t.amount::text ILIKE ${`%${query}%`}
+      )`;
+
+    const totalPages = Math.ceil(
+      Number(count.rows[0].count) / ITEMS_PER_PAGE
+    );
+    return totalPages;
+  } catch (error) {
+    throw new Error(
+      'Failed to fetch total number of transactions by acc.'
     );
   }
 }
@@ -252,6 +340,7 @@ export async function fetchTransactionsPages(
 export const fetchTransactionById = async (
   transaction_id: string
 ) => {
+  noStore();
   try {
     const data = await sql<TransactionType>`
     SELECT
@@ -315,4 +404,24 @@ export const getDashboardData = async (
       ratesByCurrency
     ),
   };
+};
+
+export const fetchAccountData = async (
+  account_id: string
+) => {
+  try {
+    const [account, { rows }] = await Promise.all([
+      fetchAccountById(account_id),
+      sql<TransactionType>`
+        SELECT * FROM transactions
+        WHERE
+        transactions.account_id = ${account_id}
+        ORDER BY transactions.transaction_date DESC;`,
+    ]);
+    return aggregateAccountChangeData(rows, account);
+  } catch (error) {
+    throw new Error(
+      'Failed to fetch account transactions.'
+    );
+  }
 };

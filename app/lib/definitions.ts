@@ -22,7 +22,7 @@ export const majorCurrencies: string[] = [
   'ZAR',
 ];
 
-export const ITEMS_PER_PAGE = 6;
+export const ITEMS_PER_PAGE = 8;
 export const getArrItemsPerPage = () => {
   const array = [];
   for (let i = 0; i < ITEMS_PER_PAGE; i++) {
@@ -57,6 +57,14 @@ export const transactionsTableColumns = [
   'Type',
   'Amount',
   'Currency',
+];
+
+export const exampleData = [
+  { value: 240000, name: 'Bank of America' },
+  { value: 300000, name: 'Chase Bank' },
+  { value: 200000, name: 'Wells Fargo' },
+  { value: 150000, name: 'Citi Bank' },
+  { value: 100000, name: 'Capital One' },
 ];
 
 export type UserType = {
@@ -103,6 +111,7 @@ export type AccountType = {
   account_type: AccountKindType;
   currency: string;
   balance: number;
+  created_at: string;
 };
 
 export type ExchangeRatesType = {

@@ -28,11 +28,11 @@ import {
   majorCurrencies,
 } from '@/lib/definitions';
 
-export function AccountForm({
-  account,
-}: {
+interface AccountFormProps {
   account?: AccountType;
-}) {
+}
+
+export function AccountForm({ account }: AccountFormProps) {
   const initialState: AccountStateType = {
     message: null,
     errors: {},

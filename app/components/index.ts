@@ -14,7 +14,7 @@ export {
 export {
   CreateButton,
   DeleteButton,
-  UpdateButton,
+  LinkButton,
   Button,
   AuthButton,
 } from './buttons';

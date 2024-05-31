@@ -9,11 +9,13 @@ export const metadata: Metadata = {
   title: 'Edit Account',
 };
 
+interface PageProps {
+  params: { id: string };
+}
+
 export default async function Page({
   params: { id },
-}: {
-  params: { id: string };
-}) {
+}: PageProps) {
   const account = await fetchAccountById(id);
   return (
     <main>

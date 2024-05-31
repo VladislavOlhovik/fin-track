@@ -8,19 +8,23 @@ export const metadata: Metadata = {
   title: 'Edit Transaction',
 };
 
+interface PageProps {
+  params: { id: string };
+}
+
 export default async function Page({
   params: { id },
-}: {
-  params: { id: string };
-}) {
+}: PageProps) {
+  const transactionsPath = '/dashboard/transactions';
   const transaction = await fetchTransactionById(id);
+
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
           {
             label: 'Transactions',
-            href: '/dashboard/transactions',
+            href: transactionsPath,
           },
           {
             label: 'Edit Transactions',
@@ -29,7 +33,10 @@ export default async function Page({
           },
         ]}
       />
-      <EditTransForm transaction={transaction} />
+      <EditTransForm
+        backPath={transactionsPath}
+        transaction={transaction}
+      />
     </main>
   );
 }

@@ -2,11 +2,7 @@
 import Link from 'next/link';
 import { useFormStatus } from 'react-dom';
 
-import {
-  DeleteIcon,
-  EditIcon,
-  PlusIcon,
-} from '@/components/icons';
+import { DeleteIcon, PlusIcon } from '@/components/icons';
 
 interface CreateButtonProps {
   title: string;
@@ -28,13 +24,21 @@ export function CreateButton({
   );
 }
 
-export function UpdateButton({ href }: { href: string }) {
+interface LinkButtonProps {
+  href: string;
+  children: React.ReactNode;
+}
+
+export function LinkButton({
+  href,
+  children,
+}: LinkButtonProps) {
   return (
     <Link
       href={href}
       className="rounded-md border p-2 hover:bg-blue-200"
     >
-      <EditIcon className="h-5" />
+      {children}
     </Link>
   );
 }
@@ -85,11 +89,13 @@ export function Button({
   );
 }
 
+interface AuthButtonProps {
+  children: React.ReactNode;
+}
+
 export const AuthButton = ({
   children,
-}: {
-  children: React.ReactNode;
-}) => {
+}: AuthButtonProps) => {
   const { pending } = useFormStatus();
   return (
     <Button className="mt-4 w-full" aria-disabled={pending}>

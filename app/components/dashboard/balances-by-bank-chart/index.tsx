@@ -1,11 +1,13 @@
 import { BankIcon } from '@/components/icons';
 import { DonutChart } from '@/components/charts';
 
+interface BalancesByBankChartProps {
+  data: { value: number; name: string }[];
+}
+
 export async function BalancesByBankChart({
   data,
-}: {
-  data: { value: number; name: string }[];
-}) {
+}: BalancesByBankChartProps) {
   return (
     <div className="w-full md:col-span-4">
       <h2 className="mb-4 text-xl md:text-2xl">

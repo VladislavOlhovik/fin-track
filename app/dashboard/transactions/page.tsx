@@ -7,21 +7,23 @@ import {
   Search,
   TransactionsTableSkeleton,
 } from '@/components';
-import { TransactionsTable } from '@/components/transactions';
+import { AllTransactionsTable } from '@/components/transactions';
 import { fetchTransactionsPages } from '@/dbAPI/data';
 
 export const metadata: Metadata = {
   title: 'Transactions',
 };
 
-export default async function Page({
-  searchParams,
-}: {
+interface PageProps {
   searchParams?: {
     query?: string;
     page?: string;
   };
-}) {
+}
+
+export default async function Page({
+  searchParams,
+}: PageProps) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const totalPages = await fetchTransactionsPages(query);
@@ -41,9 +43,10 @@ export default async function Page({
         key={query + currentPage}
         fallback={<TransactionsTableSkeleton />}
       >
-        <TransactionsTable
+        <AllTransactionsTable
           query={query}
           currentPage={currentPage}
+          editPath="/dashboard/transactions"
         />
       </Suspense>
       <div className="mt-5 flex w-full justify-center">

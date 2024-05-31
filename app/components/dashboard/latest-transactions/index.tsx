@@ -38,14 +38,11 @@ interface LatestTransactionRowProps {
   description: string;
   account_name: string;
   currency: string;
-  key: number;
 }
 
 const LatestTransactionRow = ({
-  key,
   account_name,
   amount,
-  currency,
   description,
   transaction_id,
   transaction_type,
@@ -53,8 +50,7 @@ const LatestTransactionRow = ({
   return (
     <div
       key={transaction_id}
-      className={`flex flex-row items-center justify-between py-4 px-6
-                  ${key !== 0 ? 'border-t' : ''}
+      className={`flex flex-row items-center justify-between py-4 px-6 border-t
                   ${amount[0] === '-' ? 'bg-red-50' : 'bg-green-50'}`}
     >
       <div className="flex-1">{account_name}</div>
@@ -69,7 +65,7 @@ const LatestTransactionRow = ({
         </div>
       </div>
       <p className="flex justify-end flex-1 truncate text-sm font-medium md:text-base">
-        {amount} {currency}
+        {amount}
       </p>
     </div>
   );

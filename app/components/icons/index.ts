@@ -23,3 +23,5 @@ export { TransferIcon } from './transfer-icon';
 export { EmailIcon } from './email-icon';
 export { PasswordIcon } from './password-icon';
 export { UserIcon } from './user-icon';
+export { InfoIcon } from './info-icon';
+export { ChartIcon } from './chart-icon';

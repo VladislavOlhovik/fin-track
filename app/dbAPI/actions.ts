@@ -21,7 +21,7 @@ import {
   TransactionUpadateSchema,
   TransferFormSchema,
 } from '@/lib/schemas';
-import { signIn } from '@/auth';
+import { signIn, signOut } from '@/auth';
 
 import { getUserId } from './data';
 
@@ -174,6 +174,7 @@ export const deleteTransaction = async (
 };
 
 export async function createTransaction(
+  backPath: string,
   prevState: TransactionStateType,
   formData: FormData
 ) {
@@ -231,12 +232,13 @@ export async function createTransaction(
         'Database Error: Failed to Create Transaction.',
     };
   }
-  revalidatePath('/dashboard/transactions');
-  redirect('/dashboard/transactions');
+  revalidatePath(backPath);
+  redirect(backPath);
 }
 
 export const updateTransaction = async (
   transaction_id: string,
+  backPath: string,
   prevState: TransactionUpdateStateType,
   formData: FormData
 ) => {
@@ -267,8 +269,8 @@ export const updateTransaction = async (
         'Database Error: Failed to Update Transaction.',
     };
   }
-  revalidatePath('/dashboard/transactions');
-  redirect('/dashboard/transactions');
+  revalidatePath(backPath);
+  redirect(backPath);
 };
 
 export const makeTransfer = async (
@@ -414,3 +416,7 @@ export async function createUser(
   }
   redirect('/signin');
 }
+
+export const logOut = async () => {
+  await signOut({ redirectTo: '/signin' });
+};

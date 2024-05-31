@@ -1,10 +1,10 @@
 import { Sidebar } from '@/components/dashboard';
 
-export default function Layout({
-  children,
-}: {
+interface LayoutProps {
   children: React.ReactNode;
-}) {
+}
+
+export default function Layout({ children }: LayoutProps) {
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
       <div className="w-full flex-none md:w-64">

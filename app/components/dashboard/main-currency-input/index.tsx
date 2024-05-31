@@ -9,11 +9,13 @@ import { ChangeEvent } from 'react';
 import { CoinIcon } from '@/components/icons';
 import { majorCurrencies } from '@/lib/definitions';
 
+interface MainCurrencyInputProps {
+  currency: string;
+}
+
 export const MainCurrencyInput = ({
   currency,
-}: {
-  currency: string;
-}) => {
+}: MainCurrencyInputProps) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();

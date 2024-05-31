@@ -1,22 +1,81 @@
-import { DeleteButton, UpdateButton } from '@/components';
-import { fetchFilteredTransactions } from '@/dbAPI/data';
-import { formatDateToLocal } from '@/lib/utils';
+import { DeleteButton, LinkButton } from '@/components';
+import { EditIcon } from '@/components/icons';
+
+import {
+  fetchFilteredTransactions,
+  fetchFilteredTransactionsByAcc,
+} from '@/dbAPI/data';
 import { deleteTransaction } from '@/dbAPI/actions';
 import { transactionsTableColumns } from '@/lib/definitions';
 
-interface TransactionsTableProps {
+interface AllTransactionsTableProps {
   query: string;
   currentPage: number;
+  editPath: string;
 }
 
-export async function TransactionsTable({
+export async function AllTransactionsTable({
   query,
   currentPage,
-}: TransactionsTableProps) {
+  editPath,
+}: AllTransactionsTableProps) {
   const transactions = await fetchFilteredTransactions(
     query,
     currentPage
   );
+  return (
+    <TransactionTableView
+      editPath={editPath}
+      transactions={transactions}
+    />
+  );
+}
+
+interface TransactionsByAccTableProps
+  extends AllTransactionsTableProps {
+  account_id: string;
+  editPath: string;
+}
+
+export async function TransactionsByAccTable({
+  query,
+  currentPage,
+  account_id,
+  editPath,
+}: TransactionsByAccTableProps) {
+  const transactions = await fetchFilteredTransactionsByAcc(
+    query,
+    currentPage,
+    account_id
+  );
+  return (
+    <TransactionTableView
+      transactions={transactions}
+      editPath={editPath}
+    />
+  );
+}
+
+interface TransactionTableViewProps {
+  transactions: {
+    amount: string;
+    transaction_date: string;
+    transaction_id: string;
+    account_id: string;
+    transaction_type: string;
+    description: string;
+    category: string;
+    bank_name: string;
+    account_name: string;
+    currency: string;
+  }[];
+  editPath: string;
+}
+
+const TransactionTableView = ({
+  transactions,
+  editPath,
+}: TransactionTableViewProps) => {
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -60,9 +119,11 @@ export async function TransactionsTable({
                       <p>{currency}</p>
                     </div>
                     <div className="flex justify-end gap-2">
-                      <UpdateButton
-                        href={`/dashboard/transactions/${transaction_id}/edit`}
-                      />
+                      <LinkButton
+                        href={`${editPath}/${transaction_id}/edit`}
+                      >
+                        <EditIcon className="h-5" />
+                      </LinkButton>
                       <DeleteButton
                         action={deleteTransaction.bind(
                           null,
@@ -136,7 +197,7 @@ export async function TransactionsTable({
                       {description}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
-                      {formatDateToLocal(transaction_date)}
+                      {transaction_date}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
                       {transaction_type}
@@ -149,9 +210,11 @@ export async function TransactionsTable({
                     </td>
                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                       <div className="flex justify-end gap-3">
-                        <UpdateButton
-                          href={`/dashboard/transactions/${transaction_id}/edit`}
-                        />
+                        <LinkButton
+                          href={`${editPath}/${transaction_id}/edit`}
+                        >
+                          <EditIcon className="h-5" />
+                        </LinkButton>
                         <DeleteButton
                           action={deleteTransaction.bind(
                             null,
@@ -170,4 +233,4 @@ export async function TransactionsTable({
       </div>
     </div>
   );
-}
+};

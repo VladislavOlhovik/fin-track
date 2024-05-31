@@ -2,6 +2,7 @@ import {
   AccountKindType,
   AccountType,
   ExchangeRatesType,
+  TransactionType,
 } from './definitions';
 
 export const formatDateToLocal = (
@@ -13,6 +14,27 @@ export const formatDateToLocal = (
     day: 'numeric',
     month: 'short',
     year: 'numeric',
+  };
+  const formatter = new Intl.DateTimeFormat(
+    locale,
+    options
+  );
+  return formatter.format(date);
+};
+
+export const formatDateTimeToLocal = (
+  dateStr: string,
+  locale: string = 'en-US'
+) => {
+  const date = new Date(dateStr);
+  const options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true,
   };
   const formatter = new Intl.DateTimeFormat(
     locale,
@@ -170,3 +192,60 @@ export const aggregateBalancesByBank = (
     value: Number((value / 100).toFixed(2)),
   }));
 };
+
+export const aggregateAccountChangeData = (
+  transactions: TransactionType[],
+  account: AccountType
+) => {
+  const result = transactions.reduce<{
+    dates: string[];
+    values: number[];
+  }>(
+    (acc, el) => {
+      const newBalance = acc.values[0] - el.amount;
+      acc.values.unshift(newBalance);
+      acc.dates.unshift(
+        formatDateTimeToLocal(el.transaction_date)
+      );
+      return acc;
+    },
+    {
+      dates: [],
+      values: [amountToCents(account.balance)],
+    }
+  );
+  result.dates.unshift(
+    formatDateTimeToLocal(account.created_at)
+  );
+
+  return {
+    ...result,
+    values: result.values.map(el => el / 100),
+    account,
+  };
+};
+
+type DebounceFunction = (...args: any[]) => void;
+
+export function debounce<F extends DebounceFunction>(
+  func: F,
+  wait: number
+): F {
+  let timeoutId: ReturnType<typeof setTimeout> | null =
+    null;
+
+  const debouncedFunction = function (
+    this: any,
+    ...args: Parameters<F>
+  ) {
+    if (timeoutId !== null) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+      func.apply(this, args);
+    }, wait);
+  };
+
+  return debouncedFunction as F;
+}

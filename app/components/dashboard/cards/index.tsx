@@ -31,11 +31,13 @@ const cardsMap = [
   },
 ];
 
+interface CardWrapper {
+  cardData: CardDataType;
+}
+
 export async function CardWrapper({
   cardData,
-}: {
-  cardData: CardDataType;
-}) {
+}: CardWrapper) {
   return (
     <>
       {cardsMap.map(({ icon, title, value }) => {

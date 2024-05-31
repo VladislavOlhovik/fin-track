@@ -14,14 +14,16 @@ export const metadata: Metadata = {
   title: 'Accounts',
 };
 
-export default async function Page({
-  searchParams,
-}: {
+interface PageProps {
   searchParams?: {
     query?: string;
     page?: string;
   };
-}) {
+}
+
+export default async function Page({
+  searchParams,
+}: PageProps) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const totalPages = await fetchAccountsPages(query);

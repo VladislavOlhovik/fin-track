@@ -5,18 +5,20 @@ import {
   useRouter,
 } from 'next/navigation';
 
+import { debounce } from '@/lib/utils';
+
 import { SearchIcon } from '../icons';
 
-export function Search({
-  placeholder,
-}: {
+interface SearchProps {
   placeholder: string;
-}) {
+}
+
+export function Search({ placeholder }: SearchProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const handleSearch = (term: string) => {
+  const handleSearch = debounce((term: string) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', '1');
     if (term) {
@@ -25,7 +27,7 @@ export function Search({
       params.delete('query');
     }
     replace(`${pathname}?${params.toString()}`);
-  };
+  }, 300);
   return (
     <div className="relative flex flex-1 flex-shrink-0">
       <label htmlFor="search" className="sr-only">

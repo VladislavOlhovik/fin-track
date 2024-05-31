@@ -10,13 +10,14 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const accounts = await fetchAccounts();
+  const transactionsPath = '/dashboard/transactions';
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
           {
             label: 'Transactions',
-            href: '/dashboard/transactions',
+            href: transactionsPath,
           },
           {
             label: 'Create Transactions',
@@ -25,7 +26,10 @@ export default async function Page() {
           },
         ]}
       />
-      <CreateTransForm accounts={accounts} />
+      <CreateTransForm
+        accounts={accounts}
+        backPath={transactionsPath}
+      />
     </main>
   );
 }

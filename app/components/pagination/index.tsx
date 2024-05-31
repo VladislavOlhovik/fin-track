@@ -9,11 +9,13 @@ import {
 import { generatePagination } from '@/lib/utils';
 import { LeftArrowIcon, RightArrowIcon } from '../icons';
 
+interface PaginationProps {
+  totalPages: number;
+}
+
 export function Pagination({
   totalPages,
-}: {
-  totalPages: number;
-}) {
+}: PaginationProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get('page')) || 1;

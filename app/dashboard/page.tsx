@@ -15,11 +15,13 @@ export const metadata: Metadata = {
   title: 'Dashboard',
 };
 
+interface PageProps {
+  searchParams?: { currency?: string };
+}
+
 export default async function Page({
   searchParams,
-}: {
-  searchParams?: { currency?: string };
-}) {
+}: PageProps) {
   const currency = searchParams?.currency || 'USD';
 
   const userData = await auth();
