@@ -38,7 +38,7 @@ export const AccountKind = [
   'debit',
 ];
 
-export const categoryOptions = ['bussines', 'personal'];
+export const categoryOptions = ['business', 'personal'];
 
 export const accountsTableColumns = [
   'Bank',
