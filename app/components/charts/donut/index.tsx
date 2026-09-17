@@ -16,7 +16,7 @@ export const DonutChart = ({
   useEffect(() => {
     if (chartRef.current) {
       const chartInstance = echarts.init(chartRef.current);
-      const option: echarts.EChartOption = {
+      const option: echarts.EChartsOption = {
         tooltip: {
           trigger: 'item',
         },

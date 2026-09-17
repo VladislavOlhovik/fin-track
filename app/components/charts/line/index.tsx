@@ -115,7 +115,6 @@ export const LineChartWithDiff = ({
           {
             name: name,
             type: 'line',
-            stack: 'Total',
             data: data.map(item => item.total),
           },
         ],
@@ -183,7 +182,6 @@ export const LineChart = ({
           {
             name: name,
             type: 'line',
-            stack: 'Total',
             data: yAxisData,
           },
         ],
