@@ -167,3 +167,15 @@ export type TransferStateType = {
   };
   message?: string | null;
 };
+
+export type MonthlyBalanceRow = {
+  month_start: string;
+  currency: string;
+  balance_in_cents: string;
+};
+
+export type MonthlyMoneyData = {
+  date: string;
+  total: number;
+  difference: number | null;
+};

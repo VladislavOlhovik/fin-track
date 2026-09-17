@@ -43,6 +43,13 @@ export const formatDateTimeToLocal = (
   return formatter.format(date);
 };
 
+export const formatDate = (date: string): string =>
+  new Date(`${date}T00:00:00`).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
 export const generatePagination = (
   currentPage: number,
   totalPages: number
@@ -115,6 +122,9 @@ export const exchangeCurrency = (
     );
   return balance / rate;
 };
+
+export const roundMoney = (value: number): number =>
+  Math.round(value * 100) / 100;
 
 const findAccountsByType = (
   accounts: AccountType[],

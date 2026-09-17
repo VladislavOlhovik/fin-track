@@ -1,2 +1,2 @@
 export { DonutChart } from './donut';
-export { LineChart } from './line';
+export { LineChart, LineChartWithDiff } from './line';

@@ -7,6 +7,7 @@ import {
   LatestTransactions,
   MainCurrencyInput,
   BalancesByBankChart,
+  BalancesOverTime,
 } from '@/components/dashboard';
 import { DashboardSkeleton } from '@/components';
 import { getDashboardData } from '@/dbAPI/data';
@@ -54,7 +55,7 @@ const Dashboard = async ({
 }: {
   currency: string;
 }) => {
-  const { cardData, chartData } =
+  const { cardData, chartData, monthlyMoney } =
     await getDashboardData(currency);
   return (
     <>
@@ -64,6 +65,12 @@ const Dashboard = async ({
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
         <BalancesByBankChart data={chartData} />
         <LatestTransactions />
+      </div>
+      <div className="mt-6">
+        <BalancesOverTime
+          data={monthlyMoney}
+          currency={currency}
+        />
       </div>
     </>
   );

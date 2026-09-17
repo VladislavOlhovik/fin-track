@@ -3,15 +3,20 @@ import { sql } from '@vercel/postgres';
 
 import {
   AccountType,
+  ExchangeRatesType,
   ITEMS_PER_PAGE,
   TransactionForTableType,
   TransactionType,
+  MonthlyBalanceRow,
+  MonthlyMoneyData,
 } from '@/lib/definitions';
 import {
   aggregateAccountChangeData,
   aggregateBalancesByBank,
   formatCurrency,
   formatDateToLocal,
+  formatDate,
+  roundMoney,
   transformDataForCard,
 } from '@/lib/utils';
 import { auth } from '@/auth';
@@ -393,6 +398,11 @@ export const getDashboardData = async (
     fetchAccounts(),
   ]);
 
+  const monthlyMoney = await fetchMonthlyMoneyOnFirstDay(
+    currency,
+    ratesByCurrency
+  );
+
   return {
     cardData: transformDataForCard(
       accounts,
@@ -403,6 +413,7 @@ export const getDashboardData = async (
       accounts,
       ratesByCurrency
     ),
+    monthlyMoney,
   };
 };
 
@@ -425,3 +436,152 @@ export const fetchAccountData = async (
     );
   }
 };
+
+async function fetchMonthlyMoneyOnFirstDay(
+  targetCurrency: string,
+  ratesByCurrency: ExchangeRatesType
+): Promise<MonthlyMoneyData[]> {
+  noStore();
+
+  const user_id = await getUserId();
+
+  if (!user_id) {
+    throw new Error('User is not authenticated.');
+  }
+
+  try {
+    const data = await sql<MonthlyBalanceRow>`
+      WITH user_accounts AS (
+        SELECT
+          account_id,
+          currency,
+          balance,
+          created_at
+        FROM accounts
+        WHERE user_id = ${user_id}
+      ),
+
+      date_range AS (
+        SELECT COALESCE(
+          DATE_TRUNC('month', MIN(created_at)),
+          DATE_TRUNC('month', CURRENT_DATE::timestamp)
+        ) AS first_month
+        FROM user_accounts
+      ),
+
+      months AS (
+        SELECT GENERATE_SERIES(
+          first_month,
+          DATE_TRUNC('month', CURRENT_DATE::timestamp),
+          INTERVAL '1 month'
+        ) AS month_start
+        FROM date_range
+      ),
+
+      account_month_balances AS (
+        SELECT
+          m.month_start,
+          a.account_id,
+          a.currency,
+
+         a.balance - COALESCE(
+  SUM(
+    CASE
+      WHEN LOWER(t.transaction_type) = 'income'
+        THEN ABS(t.amount)
+
+      WHEN LOWER(t.transaction_type) = 'expense'
+        THEN -ABS(t.amount)
+
+      ELSE 0
+    END
+  ),
+  0
+) AS balance_in_cents
+
+        FROM months m
+
+        JOIN user_accounts a
+          ON a.created_at <= m.month_start
+
+        LEFT JOIN transactions t
+          ON t.account_id = a.account_id
+          AND t.transaction_date >= m.month_start
+
+        GROUP BY
+          m.month_start,
+          a.account_id,
+          a.currency,
+          a.balance
+      )
+
+      SELECT
+        month_start::date::text AS month_start,
+        currency,
+        SUM(balance_in_cents)::text AS balance_in_cents
+      FROM account_month_balances
+      GROUP BY month_start, currency
+      ORDER BY month_start;
+    `;
+
+    const monthlyTotals = new Map<string, number>();
+    const selectedCurrency = targetCurrency.toUpperCase();
+
+    for (const row of data.rows) {
+      const accountCurrency = row.currency.toUpperCase();
+
+      const exchangeRate =
+        accountCurrency === selectedCurrency
+          ? 1
+          : ratesByCurrency[accountCurrency];
+
+      if (!exchangeRate) {
+        throw new Error(
+          `Exchange rate is missing for ${accountCurrency}`
+        );
+      }
+
+      const balanceInTargetCurrency =
+        Number(row.balance_in_cents) / exchangeRate / 100;
+
+      const previousTotal =
+        monthlyTotals.get(row.month_start) ?? 0;
+
+      monthlyTotals.set(
+        row.month_start,
+        previousTotal + balanceInTargetCurrency
+      );
+    }
+
+    const orderedMonthlyTotals = Array.from(
+      monthlyTotals.entries()
+    ).sort(([firstDate], [secondDate]) =>
+      firstDate.localeCompare(secondDate)
+    );
+
+    return orderedMonthlyTotals.map(
+      ([date, total], index) => {
+        const previousTotal =
+          index === 0
+            ? null
+            : orderedMonthlyTotals[index - 1][1];
+
+        const difference =
+          previousTotal === null
+            ? null
+            : roundMoney(total - previousTotal);
+
+        return {
+          date: formatDate(date),
+          total: roundMoney(total),
+          difference,
+        };
+      }
+    );
+  } catch (error) {
+    console.error('Monthly balance error:', error);
+    throw new Error(
+      'Failed to calculate monthly balances.'
+    );
+  }
+}
